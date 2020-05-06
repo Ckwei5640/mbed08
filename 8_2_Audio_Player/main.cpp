@@ -40,13 +40,17 @@ int main(void)
 {
   t.start(callback(&queue, &EventQueue::dispatch_forever));
 
-  for(int i = 0; i < 42; i++)
+for(int i = 0; i < 42; i++)
   {
     int length = noteLength[i];
     while(length--)
     {
-      queue.call(playNote, song[i]);
-      if(length <= 1) wait(0.5);
+      // the loop below will play the note for the duration of 1s
+      for(int j = 0; j < kAudioSampleFrequency / kAudioTxBufferSize; ++j)
+      {
+        queue.call(playNote, song[i]);
+      }
+      if(length < 1) wait(1.0);
     }
   }
 }
